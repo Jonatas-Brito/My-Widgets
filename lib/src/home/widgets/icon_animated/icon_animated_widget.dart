@@ -6,6 +6,7 @@ class IconAnimated extends StatefulWidget {
   final Color color;
   final IconData iconOutline;
   final IconData iconFull;
+  final VoidCallback onTap;
 
   const IconAnimated(
       {Key key,
@@ -13,7 +14,8 @@ class IconAnimated extends StatefulWidget {
       this.iconFull,
       this.size,
       this.color,
-      this.sizeAnimation = false})
+      this.sizeAnimation = false,
+      this.onTap})
       : super(key: key);
   @override
   _IconAnimatedState createState() => _IconAnimatedState();
@@ -37,6 +39,8 @@ class _IconAnimatedState extends State<IconAnimated>
 
   void _onTapDown(TapDownDetails details) {
     Future.delayed(Duration(milliseconds: 100), () => _controller.forward());
+    Future.delayed(
+        Duration(milliseconds: 400), () => setState(() => visible = !visible));
   }
 
   void _onTapUp(TapUpDetails details) {
@@ -47,10 +51,12 @@ class _IconAnimatedState extends State<IconAnimated>
     return Stack(
       alignment: Alignment.center,
       children: [
-        Icon(
-          widget.iconOutline,
-          color: widget.color,
-          size: widget.size,
+        Container(
+          child: Icon(
+            widget.iconOutline,
+            color: widget.color,
+            size: widget.size,
+          ),
         ),
         visible
             ? TweenAnimationBuilder(
@@ -86,6 +92,7 @@ class _IconAnimatedState extends State<IconAnimated>
 
   @override
   Widget build(BuildContext context) {
+    var onTap = widget.onTap;
     _scale = 1 - _controller.value + 0.2;
 
     return GestureDetector(
@@ -93,12 +100,16 @@ class _IconAnimatedState extends State<IconAnimated>
       onTapDown: widget.sizeAnimation ? _onTapDown : null,
       child: Transform.scale(
         scale: _scale,
-        child: _iconAnimated(),
+        child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(80)),
+            width: 40,
+            height: 40,
+            child: _iconAnimated()),
       ),
-      onTap: () {
-        Future.delayed(Duration(milliseconds: 300),
-            () => setState(() => visible = !visible));
-      },
+      onTap: onTap,
     );
   }
 }

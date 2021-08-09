@@ -73,7 +73,7 @@ class _IconAnimatedState extends State<IconAnimated>
                     ),
                   );
                 })
-            : (TweenAnimationBuilder(
+            : TweenAnimationBuilder(
                 tween: Tween(begin: 1.0, end: 0.0),
                 duration: Duration(milliseconds: 180),
                 builder: (context, value, _) {
@@ -85,7 +85,7 @@ class _IconAnimatedState extends State<IconAnimated>
                       size: widget.size,
                     ),
                   );
-                })),
+                }),
       ],
     );
   }
